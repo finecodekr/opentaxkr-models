@@ -40,6 +40,27 @@ class 납세자(Model):
     대표자명: str = None
 
 
+@dataclass(kw_only=True)
+class 세무대리인:
+    대표자주민등록번호: str
+    법인등록번호: str = None
+    대표자성명: str
+    법인명_상호: str = None
+    전화번호: str
+    사업자등록번호: str
+    관리번호: str
+    성명: str
+    생년월일: date
+    사업장소재지: str = None
+    우편번호: str = None
+    세무서코드: str = None
+    법정동코드: str = None
+    홈택스ID: str = None
+
+    def __post_init__(self):
+        self.전화번호 = self.전화번호.replace('-', '')
+
+
 class 세금계산서분류(Enum):
     세금계산서 = '01'
     수정세금계산서 = '02'
