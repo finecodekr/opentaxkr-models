@@ -1,6 +1,6 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "opentaxkr-models"
@@ -15,6 +15,9 @@ dependencies = [
 
 [tool.setuptools]
 packages = ["otkmodels"]
+
+[tool.setuptools.dynamic]
+description = {file = "README.md"}
 
 [project.urls]
 Home = "https://github.com/finecodekr/opentaxkr-models"

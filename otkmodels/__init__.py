@@ -1,6 +1,3 @@
-"""
-한국의 세무회계를 다루는데 필요한 데이터 모델을 정의해서 다양한 곳에서 공통으로 사용할 수 있게 제공한다.
-"""
 from dataclasses import dataclass
 from datetime import datetime, date
 from decimal import Decimal
