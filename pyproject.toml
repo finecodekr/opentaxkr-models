@@ -12,5 +12,9 @@ dependencies = [
     "python-dateutil",
     "addresskr",
 ]
+
+[tool.setuptools]
+packages = ["otkmodels"]
+
 [project.urls]
-Home = "https://github.com/finecodekr/opentaxkr"
+Home = "https://github.com/finecodekr/opentaxkr-models"
