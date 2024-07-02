@@ -15,6 +15,25 @@ class 납세자종류(Enum):
     개인사업자 = '02'
     법인사업자 = '03'
 
+    @classmethod
+    def detect(cls, 납세자ID):
+        num = str(납세자ID).replace('-', '')
+        if len(num) == 13 and int(num[2:4]) in range(1, 13) and int(num[4:6]) in range(1, 32):
+            return cls.개인
+
+        # TODO 맞는 규칙인지 확인할 것.
+        if 납세자ID == '0000000000':
+            return cls.개인
+
+        if len(num) == 10:
+            middle_number = int(num[3:5])
+            if middle_number in chain(range(1, 80), range(90, 100), [80, 89]):
+                return cls.개인사업자
+            if middle_number in range(81, 89):
+                return cls.법인사업자
+
+        raise ValueError(f'사업자번호 오류: {납세자ID}')
+
 
 @dataclass(kw_only=True)
 class 업종(Model):
@@ -30,8 +49,8 @@ class 납세자(Model):
     휴대전화번호: str = None
     전자메일주소: str = None
     주소: str = None
-    납세자종류: 납세자종류 = None
-    업종: 업종 = None
+    납세자종류: 납세자종류; 납세자종류 = None
+    업종: 업종; 업종 = None
     개업일: date = None
     폐업일: date = None
     사업장소재지: str = None
