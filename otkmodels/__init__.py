@@ -38,8 +38,19 @@ class 납세자종류(Enum):
 @dataclass(kw_only=True)
 class 업종(Model):
     코드: str
-    업태: str
-    종목: str
+    업태: str = None
+    종목: str = None
+    대분류: str = None
+    중분류: str = None
+    소분류: str = None
+    세분류: str = None
+    세세분류: str = None
+    세부설명: str = None
+    표준산업분류: dict = None
+
+    def __post_init__(self):
+        self.업태 = self.업태 or self.대분류
+        self.종목 = self.종목 or self.세세분류
 
 
 @dataclass(kw_only=True)
