@@ -2,7 +2,10 @@ from dataclasses import dataclass
 from datetime import datetime, date
 from decimal import Decimal
 from enum import Enum
+from itertools import chain
 from typing import List
+
+from addresskr import 도로명주소
 
 from otkmodels.util import Model
 
@@ -22,7 +25,7 @@ class 업종(Model):
 
 @dataclass(kw_only=True)
 class 납세자(Model):
-    납세자번호: str
+    납세자ID: str
     납세자명: str
     휴대전화번호: str = None
     전자메일주소: str = None
@@ -34,10 +37,29 @@ class 납세자(Model):
     사업장소재지: str = None
     사업장전화번호: str = None
     간이과세여부: bool = False
+    국적코드: str = 'KR'
+    거주지국가코드: str = 'KR'
+    홈택스ID: str = None
     # 법인에만 해당하는 정보
     대표자주민등록번호: str = None
     법인등록번호: str = None
     대표자명: str = None
+
+    def __post_init__(self):
+        self.납세자ID = self.납세자ID.replace('-', '')
+        self.휴대전화번호 = self.휴대전화번호 and self.휴대전화번호.replace('-', '')
+        self.대표자주민등록번호 = self.대표자주민등록번호 or self.납세자ID
+        self.대표자명 = self.대표자명 or self.납세자명
+
+        if self.납세자종류 is None:
+            self.납세자종류 = 납세자종류.detect(self.납세자ID)
+
+    @property
+    def 도로명주소(self):
+        if not hasattr(self, '_도로명주소'):
+            self._도로명주소 = 도로명주소.parse(self.주소)
+
+        return self._도로명주소
 
 
 @dataclass(kw_only=True)
