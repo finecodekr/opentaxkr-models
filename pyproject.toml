@@ -11,7 +11,9 @@ dynamic = ["version", "description"]
 dependencies = [
     "python-dateutil",
     "addresskr",
-    "openpyxl"
+    "openpyxl",
+    "beautifulsoup4",
+    "lxml",
 ]
 
 [tool.setuptools]
