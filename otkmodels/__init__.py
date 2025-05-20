@@ -1,3 +1,6 @@
+"""
+한국의 세무회계 데이터를 여러 도구에서 공통적으로 다루기 쉽도록 자주 사용하는 데이터의 스키마를 모델로 정의해둔다.
+"""
 from dataclasses import dataclass
 from datetime import datetime, date
 from decimal import Decimal
@@ -7,7 +10,7 @@ from typing import List
 
 from addresskr import 도로명주소
 
-from otkmodels.util import Model
+from .util import Model
 
 
 class 납세자종류(Enum):

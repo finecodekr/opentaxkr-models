@@ -1,12 +1,12 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
 
 [project]
 name = "opentaxkr-models"
 authors = [{name = "Pak Youngrok", email = "youngrok@finecode.kr"}]
 license = {file = "LICENSE"}
-classifiers = ["License :: OSI Approved :: Apache Software License"]
+classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
 dependencies = [
     "python-dateutil",
@@ -16,11 +16,8 @@ dependencies = [
     "lxml",
 ]
 
-[tool.setuptools]
-packages = ["otkmodels"]
-
-[tool.setuptools.dynamic]
-description = {file = "README.md"}
+[tool.flit.module]
+name = "otkmodels"
 
 [project.urls]
 Home = "https://github.com/finecodekr/opentaxkr-models"
