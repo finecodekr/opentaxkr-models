@@ -38,6 +38,9 @@ def guess(업태, 종목) -> 업종 | None:
     """업태는 업종의 대분류, 종목은 업종의 소분류 역할을 하는데, 이 값이 정확한 명칭이 아니더라도 전체 업종 검색을 통해 가장 비슷한 업종을 찾는다."""
     ensure_data_loaded()
 
+    if not 업태 or not 종목:
+        return None
+
     if 업태 in 대분류_set:
         found_대분류 = 업태
     else:
