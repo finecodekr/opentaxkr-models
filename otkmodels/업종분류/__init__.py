@@ -1,5 +1,7 @@
 import logging
 import os.path
+from difflib import SequenceMatcher
+from typing import Dict, Callable, Iterable, TypeVar
 
 import openpyxl
 
@@ -8,7 +10,8 @@ from otkmodels import 업종
 업종코드미상 = 'ZZZZZZ'
 
 
-data = {}
+data: Dict[str, 업종] = {}
+대분류_set = set()
 
 
 def pick(code, notify_not_found=False):
@@ -31,14 +34,32 @@ def search(query):
     return found
 
 
-def guess(업종명):
-    if not 업종명:
-        return None
+def guess(업태, 종목) -> 업종 | None:
+    """업태는 업종의 대분류, 종목은 업종의 소분류 역할을 하는데, 이 값이 정확한 명칭이 아니더라도 전체 업종 검색을 통해 가장 비슷한 업종을 찾는다."""
+    ensure_data_loaded()
 
-    result = search(업종명)
-    if result:
-        return result[0]
-    return None
+    if 업태 in 대분류_set:
+        found_대분류 = 업태
+    else:
+        found_대분류, _ = find_best_match(업태, 대분류_set)
+
+    # 대분류 안에서 먼저 찾고 그 결과가 만족스럽지 않으면 대분류 상관없이 전체 검색해서 세분류가 가장 비슷한 것을 찾되, 이때는 더 높아져야 한다.
+    found, ratio = find_best_match(종목, [i for i in data.values() if i.대분류 == found_대분류], lambda i: i.세분류)
+    if ratio < 0.6:
+        fullscan_found, fullscan_ratio = find_best_match(종목, [i for i in data.values()], lambda i: i.세분류)
+
+        if fullscan_ratio > 0.6:
+            return fullscan_found
+
+    return found
+
+
+def pick_or_guess(업종코드, 업태, 종목):
+    found = pick(업종코드)
+    if found:
+        return found
+
+    return guess(업태, 종목)
 
 
 def ensure_data_loaded():
@@ -70,6 +91,8 @@ def ensure_data_loaded():
                 세세분류=row[24].value,
             )
         )
+
+        대분류_set.add(data[row[4].value].대분류)
 
     data[업종코드미상] = 업종(
         코드=업종코드미상,
@@ -113,3 +136,17 @@ def normalize_대분류(value):
         }
     )
 }
+
+
+T = TypeVar('T')
+def find_best_match(text, data_set: Iterable[T], picker: Callable[[T], str] = lambda t: t):
+    ratio = 0
+    found = None
+    for item in data_set:
+        new_ratio = SequenceMatcher(None, text, picker(item)).ratio()
+
+        if new_ratio > ratio:
+            ratio = new_ratio
+            found = item
+
+    return found, ratio
