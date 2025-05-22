@@ -50,6 +50,9 @@ def ensure_data_loaded():
     sheet = book.active
 
     for row in sheet.iter_rows(min_row=6):
+        if not row[4].value:
+            continue
+
         data[row[4].value] = 업종(
             코드=row[4].value,
             대분류=normalize_대분류(row[6].value),
