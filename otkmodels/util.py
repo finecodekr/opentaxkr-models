@@ -5,7 +5,10 @@ import dateutil.parser
 
 class Model:
     def __setattr__(self, key, value):
-        super().__setattr__(key, convert_type(value, self.__annotations__[key]))
+        if key not in self.__annotations__:
+            super().__setattr__(key, convert_type(value, self.__annotations__[key]))
+        else:
+            super().__setattr__(key, value)
 
 
 def convert_type(value, to_type):
