@@ -2,6 +2,7 @@
 한국의 세무회계 데이터를 여러 도구에서 공통적으로 다루기 쉽도록 자주 사용하는 데이터의 스키마를 모델로 정의해둔다.
 """
 import dataclasses
+import logging
 from dataclasses import dataclass
 from datetime import datetime, date
 from decimal import Decimal
@@ -93,7 +94,8 @@ class 납세자(Model):
         if not hasattr(self, '_도로명주소'):
             try:
                 self._도로명주소 = 도로명주소.parse(self.주소)
-            except:
+            except Exception as e:
+                logging.exception(e)
                 self._도로명주소 = object.__new__(도로명주소)
                 for f in dataclasses.fields(도로명주소):
                     setattr(self._도로명주소, f.name, f.type())
