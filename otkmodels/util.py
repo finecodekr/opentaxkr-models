@@ -1,3 +1,4 @@
+import inspect
 from datetime import date, datetime
 
 import dateutil.parser
@@ -5,8 +6,9 @@ import dateutil.parser
 
 class Model:
     def __setattr__(self, key, value):
-        if key in self.__annotations__:
-            super().__setattr__(key, convert_type(value, self.__annotations__[key]))
+        annotations = inspect.get_annotations(type(self), eval_str=True)
+        if key in annotations:
+            super().__setattr__(key, convert_type(value, annotations[key]))
         else:
             super().__setattr__(key, value)
 
