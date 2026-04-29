@@ -58,6 +58,10 @@ class 업종(Model):
         self.종목 = self.종목 or self.세세분류
 
 
+_납세자종류 = 납세자종류
+_업종 = 업종
+
+
 @dataclass(kw_only=True)
 class 납세자(Model):
     납세자ID: str
@@ -65,8 +69,8 @@ class 납세자(Model):
     휴대전화번호: str = None
     전자메일주소: str = None
     주소: str = None
-    납세자종류: 납세자종류; 납세자종류 = None
-    업종: 업종; 업종 = None
+    납세자종류: _납세자종류 = None
+    업종: _업종 = None
     개업일: date = None
     폐업일: date = None
     사업장소재지: str = None
